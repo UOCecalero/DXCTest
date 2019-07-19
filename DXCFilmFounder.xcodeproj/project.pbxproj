@@ -18,6 +18,7 @@
 		34C2626922E1E15400F79408 /* MainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2626822E1E15400F79408 /* MainRouter.swift */; };
 		34C2626B22E1E16600F79408 /* MainProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2626A22E1E16600F79408 /* MainProtocols.swift */; };
 		34C2626E22E1E8B900F79408 /* Film.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2626D22E1E8B900F79408 /* Film.swift */; };
+		34C2627022E1F11B00F79408 /* FilmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2626F22E1F11B00F79408 /* FilmTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		34C2626822E1E15400F79408 /* MainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainRouter.swift; sourceTree = "<group>"; };
 		34C2626A22E1E16600F79408 /* MainProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainProtocols.swift; sourceTree = "<group>"; };
 		34C2626D22E1E8B900F79408 /* Film.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Film.swift; sourceTree = "<group>"; };
+		34C2626F22E1F11B00F79408 /* FilmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilmTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				34C2626D22E1E8B900F79408 /* Film.swift */,
+				34C2626F22E1F11B00F79408 /* FilmTableViewCell.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -175,6 +178,7 @@
 				34C2625022E1DF7500F79408 /* AppDelegate.swift in Sources */,
 				34C2626722E1E14800F79408 /* MainInteractor.swift in Sources */,
 				34C2626E22E1E8B900F79408 /* Film.swift in Sources */,
+				34C2627022E1F11B00F79408 /* FilmTableViewCell.swift in Sources */,
 				34C2626522E1E13B00F79408 /* MainPresenter.swift in Sources */,
 				34C2626922E1E15400F79408 /* MainRouter.swift in Sources */,
 			);

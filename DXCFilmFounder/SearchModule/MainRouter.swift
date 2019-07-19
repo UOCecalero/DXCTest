@@ -15,7 +15,7 @@ class MainRouter: MainRouterProtocol {
 //        return UIStoryboard(name: "Main", bundle: nil)
 //    }
     
-    static func create() -> UIViewController {
+    static func createMainViewController() -> UIViewController {
   
 //        IF USING STORYBOARD
 //        guard let mainViewController = storyboard.instantiateViewController(withIdentifier: "MainViewController") as? MainViewProtocol else {

@@ -10,7 +10,13 @@ import Foundation
 
 class MainInteractor: MainInteractorProtocol {
     
-    var presenter: MainPresenterProtocol?
+    weak var presenter: MainPresenterProtocol?
+    
+    
+}
+
+extension MainInteractor {
+    
     
     
 }

@@ -9,11 +9,14 @@
 import Foundation
 
 class MainPresenter: MainPresenterProtocol {
-    
-    var view: MainViewProtocol?
+
+    weak var view: MainViewProtocol?
     var interactor: MainInteractorProtocol?
     var router: MainRouterProtocol?
-    
+
+    func viewDidLoad() {
+
+    }
     
     
     

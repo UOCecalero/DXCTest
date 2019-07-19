@@ -12,6 +12,14 @@ protocol MainViewProtocol: class {
     
     var presenter: MainPresenterProtocol? {get set}
     
+    var filmsArray: [Film]? {get set}
+    var searchController: UISearchController {get set}
+    
+    
+    func setUpView()
+    func showAlert(_ message: String) 
+    
+    
 }
 
 protocol MainPresenterProtocol: class {
@@ -19,18 +27,23 @@ protocol MainPresenterProtocol: class {
     var view: MainViewProtocol? { get set }
     var interactor: MainInteractorProtocol? { get set }
     var router: MainRouterProtocol? { get set }
+    
+    func viewDidLoad()
+    func getFilms()
 
 }
 protocol MainInteractorProtocol: class {
     
     var presenter: MainPresenterProtocol? { get set }
+    
+    func getFilms()
 
    
 }
 
 protocol MainRouterProtocol: class {
     
-    static func create() -> UIViewController
+    static func createMainViewController() -> UIViewController
     
 //    func goToDetail(from view: MainViewProtocol)
     
