@@ -73,6 +73,7 @@ class MainViewController: UIViewController {
 
 extension MainViewController: MainViewProtocol {
     
+    
     func setUpView() {
         
         view.addSubview(tableView)
@@ -122,11 +123,28 @@ extension MainViewController: UISearchResultsUpdating {
         
 //        print(text)
         
-        self.timer = Timer(timeInterval: 1, repeats: false, block: {_ in
-            
-            //Aqui se lanza una petición a la API
-            
+        if let timer = timer { timer.invalidate() }
+        
+        timer = Timer(timeInterval: 1, repeats: false, block: {_ in
+
+            self.presenter?.getFilmsCollection(text)
+
         })
+        timer?.fire()
+        
+        
+//        self.presenter?.getFilmsCollection(text)
+    }
+
+    func showSearchResults(_ films: [Film]) {
+        
+        print(films)
+        
+    }
+    
+    func showReults() {
+        
+        
     }
 
 }

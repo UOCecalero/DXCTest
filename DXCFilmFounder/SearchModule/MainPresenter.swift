@@ -9,13 +9,27 @@
 import Foundation
 
 class MainPresenter: MainPresenterProtocol {
-
+    
     weak var view: MainViewProtocol?
     var interactor: MainInteractorProtocol?
     var router: MainRouterProtocol?
 
     func viewDidLoad() {
 
+    }
+    
+    func showAlert(_ message: String) {
+        view?.showAlert(message)
+    }
+    
+    func getFilmsCollection(_ query: String) {
+        interactor?.getFilmsCollection(query)
+    }
+    
+    func showSearchResults(_ films: [Film]) {
+        
+        guard let view = view else {return}
+        view.showSearchResults(films)
     }
     
     

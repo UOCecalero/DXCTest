@@ -17,7 +17,10 @@ protocol MainViewProtocol: class {
     
     
     func setUpView()
-    func showAlert(_ message: String) 
+    func showAlert(_ message: String)
+    
+    func showSearchResults(_ films: [Film])
+    func showReults()
     
     
 }
@@ -29,14 +32,19 @@ protocol MainPresenterProtocol: class {
     var router: MainRouterProtocol? { get set }
     
     func viewDidLoad()
-    func getFilms()
+    func getFilmsCollection(_ query: String)
+    
+    func showSearchResults(_ films: [Film])
+    
+    func showAlert(_ message: String)
 
 }
 protocol MainInteractorProtocol: class {
     
     var presenter: MainPresenterProtocol? { get set }
     
-    func getFilms()
+    func getFilmsCollection(_ query: String)
+    func getFilm(_ id: Int)
 
    
 }
