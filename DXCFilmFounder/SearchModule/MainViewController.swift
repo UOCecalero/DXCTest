@@ -120,7 +120,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         
         guard let film = filmsArray?[indexPath.row] else {return}
         presenter?.goToDetail(with: film)
-        
+        tableView.deselectRow(at: indexPath, animated: true)
         
     }
     
