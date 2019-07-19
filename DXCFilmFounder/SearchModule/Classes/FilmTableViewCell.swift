@@ -88,8 +88,6 @@ class FilmTableViewCell: UITableViewCell {
                 }
             }
         }
-        
-        setupView()
  
     }
     
@@ -109,7 +107,7 @@ class FilmTableViewCell: UITableViewCell {
         
             overview.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
             overview.topAnchor.constraint(equalTo: topAnchor, constant: 270),
-            overview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 50),
+            overview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50)
            
             

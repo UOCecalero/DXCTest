@@ -19,6 +19,13 @@ class DetailViewController: UIViewController {
         
     }
     
+    var scroll: UIScrollView = {
+        let sv = UIScrollView()
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        return sv
+        
+    }()
+    
     var portada: UIImageView = {
         
         let iv = UIImageView(frame: .zero)
@@ -29,20 +36,12 @@ class DetailViewController: UIViewController {
         return iv
     }()
     
-    var titulo: UILabel = {
-        let label = UILabel(frame: .zero)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.lineBreakMode = .byWordWrapping
-        label.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        label.numberOfLines = 2
-        return label
-    }()
     
     var overview: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
         label.lineBreakMode = .byWordWrapping
-        label.numberOfLines = 2
+        label.numberOfLines = 0
         return label
     }()
 
@@ -50,6 +49,7 @@ class DetailViewController: UIViewController {
         super.viewDidLoad()
 
         presenter?.viewDidLoad()
+        setUpView()
         
     }
     
@@ -63,27 +63,28 @@ extension DetailViewController: DetailViewProtocol {
         
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
-        view.addSubview(portada)
-        view.addSubview(titulo)
-        view.addSubview(overview)
+        view.addSubview(scroll)
+        scroll.addSubview(portada)
+        scroll.addSubview(overview)
         //        addSubview(rating)
         
         NSLayoutConstraint.activate([
         
-        portada.heightAnchor.constraint(equalToConstant: 200),
-        portada.widthAnchor.constraint(equalToConstant: 200/2),
-        portada.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0),
-        portada.topAnchor.constraint(equalTo: view.topAnchor, constant: 10),
+        scroll.widthAnchor.constraint(equalTo: view.widthAnchor),
+        scroll.heightAnchor.constraint(equalTo: view.heightAnchor),
+        scroll.topAnchor.constraint(equalTo: view.topAnchor),
+        scroll.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+        portada.heightAnchor.constraint(equalToConstant: 400),
+        portada.widthAnchor.constraint(equalToConstant: 400/2),
+        portada.centerXAnchor.constraint(equalTo: scroll.centerXAnchor, constant: 0),
+        portada.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 50),
         
-        titulo.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-        titulo.heightAnchor.constraint(equalToConstant: 50),
-        titulo.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-        titulo.topAnchor.constraint(equalTo: portada.bottomAnchor, constant: 20),
         
         overview.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-        overview.topAnchor.constraint(equalTo: view.topAnchor, constant: 270),
-        overview.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 50),
-        overview.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+        overview.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 480),
+        overview.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: 50),
+        overview.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: 50),
         
         ])
         
@@ -91,6 +92,23 @@ extension DetailViewController: DetailViewProtocol {
     
     func configView(){
         
+        guard let film = film else {return}
+        
+        navigationItem.title = film.title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        overview.text = film.overview
+        
+        if let poster = film.poster_path {
+            if let url = URL(string: "https://image.tmdb.org/t/p/w500\(poster)"){
+                if let data = try? Data(contentsOf: url)
+                {
+                    let image = UIImage(data: data)
+                    self.portada.image = image
+                }
+            }
+        }
+
         
     }
     
