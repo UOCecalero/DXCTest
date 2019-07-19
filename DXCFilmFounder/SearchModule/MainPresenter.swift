@@ -29,7 +29,13 @@ class MainPresenter: MainPresenterProtocol {
     func showSearchResults(_ films: [Film]) {
         
         guard let view = view else {return}
-        view.showSearchResults(films)
+        view.filmsArray = films
+    }
+    
+    func goToDetail(with film: Film) {
+        
+        guard let view = view else {return}
+        router?.goToDetail(from: view, with: film)
     }
     
     

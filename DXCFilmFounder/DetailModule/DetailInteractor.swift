@@ -1,5 +1,5 @@
 //
-//  MainInteractor.swift
+//  DetailInteractor.swift
 //  DXCFilmFounder
 //
 //  Created by Edu Calero on 19/07/2019.
@@ -8,22 +8,19 @@
 
 import Foundation
 
-class MainInteractor: MainInteractorProtocol {
-
-    weak var presenter: MainPresenterProtocol?
+class DetailInteractor: DetailInteractorProtocol {
+    
+    var presenter: DetailPresenterProtocol?
+    
+    var film: Film?
     
     let apiUrl = "https://api.themoviedb.org/4/"
     let token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZmM1ZmY3Zjc2NThjMjk2ZGMxODlmOTNlNTMzY2JjOSIsInN1YiI6IjVkMzFkZmE0Y2FhYjZkMzFiMmEzZDQxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.at6dD6L5d9a_p9tPv-A9ThvMvnCEXnlHE_yVpf-sW9M"
-    var pager: Int = 0
     
     
-    func getFilmsCollection(_ query: String) {
+    func getFilm(_ id: Int) {
         
-        guard query != "" else {return}
-        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {return}
-        let urlString: String = "\(apiUrl)search/movie?query=\(query)&include_adult=false&page=1&language=es-ES"
-        
-        guard let url = URL(string: urlString ) else {return}
+        guard let url = URL(string: "\(apiUrl)movie/\(id)?language=es-ES") else {return}
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -33,11 +30,11 @@ class MainInteractor: MainInteractorProtocol {
             
             if let error = error {
                 //            self.handleClientError(error)
-                print("FILMS Session Client Error: \(error)")
+                print("FILM Session Client Error: \(error)")
                 fatalError()
             }
             guard let httpResponse = response as? HTTPURLResponse else {
-                print("FILMS RESPONSE ERROR: \(response!)")
+                print("FILM RESPONSE ERROR: \(response!)")
                 fatalError()
             }
             if httpResponse.statusCode == 404 {
@@ -45,7 +42,7 @@ class MainInteractor: MainInteractorProtocol {
             }
             
             guard (200...299).contains(httpResponse.statusCode) else {
-                print("FILMS HTTP REQUEST ERROR \(httpResponse.statusCode)")
+                print("FILM HTTP REQUEST ERROR \(httpResponse.statusCode)")
                 
                 if let data = data  {
                     
@@ -60,11 +57,10 @@ class MainInteractor: MainInteractorProtocol {
                 
                 do {
                     
-                    let page = try JSONDecoder().decode(FilmCollectionPage.self, from: data)
-                    guard let results = page.results else {return}
-                    DispatchQueue.main.async {
-                        self.presenter?.showSearchResults(results)
-                    }
+                    let result = try JSONDecoder().decode(Film.self, from: data)
+//                    DispatchQueue.main.async {
+//                       //
+//                    }
                     
                     
                 } catch {
@@ -83,13 +79,7 @@ class MainInteractor: MainInteractorProtocol {
         
         
     }
-    
-    func getFilm(_ id: Int) {
-        
-        
-    }
+
     
     
 }
-
-

@@ -10,6 +10,8 @@ import UIKit
 
 class MainRouter: MainRouterProtocol {
     
+    
+    
 //        IF USING STORYBOARD
 //    static var storyboard: UIStoryboard {
 //        return UIStoryboard(name: "Main", bundle: nil)
@@ -36,6 +38,16 @@ class MainRouter: MainRouterProtocol {
         
             return mainViewController
         }
-
     
+    func goToDetail(from view: MainViewProtocol, with film: Film) {
+            
+        let detailViewController = DetailRouter.createDetailViewController(with: film)
+        
+        guard let mainViewController = view as? MainViewController else {
+            fatalError("Invalid View Protocol type")
+        }
+        
+        mainViewController.navigationController?.pushViewController(detailViewController, animated: true)
+    }
+
 }

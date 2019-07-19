@@ -16,6 +16,7 @@ class MainViewController: UIViewController {
         
         let tv = UITableView(frame: .zero, style: .plain)
         tv.translatesAutoresizingMaskIntoConstraints = false
+        tv.separatorStyle = .none
         tv.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         tv.register(FilmTableViewCell.self, forCellReuseIdentifier: "FilmTableViewCell")
         return tv
@@ -25,18 +26,23 @@ class MainViewController: UIViewController {
         
         let sc = UISearchController(searchResultsController: nil)
         sc.searchBar.placeholder = "Busca..."
-//        searchController.obscuresBackgroundDuringPresentation = false
+//        searchController.obscuresBackgroundDuringPresentation = true
         return sc
     }()
     
-    var timer: Timer? = nil
+    var timer: Timer?
 
     var filmsArray: [Film]? {
-        didSet { tableView.reloadData() }
+        didSet {
+            tableView.reloadData()
+            tableView.tableFooterView = UIView(frame: CGRect.zero)
+        }
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.definesPresentationContext = true
         
         //UITableViewConfig
         tableView.delegate = self
@@ -58,16 +64,6 @@ class MainViewController: UIViewController {
 
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 
@@ -102,13 +98,30 @@ extension MainViewController: MainViewProtocol {
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return filmsArray?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        return UITableViewCell()
+        let film = filmsArray?[indexPath.row]
+        
+        let celda = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as! FilmTableViewCell
+        
+        celda.film = film
+        
+        celda
+        
+        return celda
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        guard let film = filmsArray?[indexPath.row] else {return}
+        presenter?.goToDetail(with: film)
+        
+        
     }
     
     
@@ -121,26 +134,19 @@ extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else {return}
         
-//        print(text)
-        
         if let timer = timer { timer.invalidate() }
-        
-        timer = Timer(timeInterval: 1, repeats: false, block: {_ in
-
+        timer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: {timer in
             self.presenter?.getFilmsCollection(text)
+            print(text)
 
         })
-        timer?.fire()
-        
-        
-//        self.presenter?.getFilmsCollection(text)
     }
 
-    func showSearchResults(_ films: [Film]) {
-        
-        print(films)
-        
-    }
+//    func showSearchResults(_ films: [Film]) {
+//        
+//        print(films)
+//        
+//    }
     
     func showReults() {
         

@@ -30,7 +30,7 @@ struct Film: Codable {
     let genre_ids: [Int]?            //[18, 10749],
     let backdrop_path: String?       //"/zqwSA5iMoOVSHmioQi9MkySUumh.jpg",
     let adult: Bool?                 //false,
-    let overview:  String?           //"La familia Recchi pertenece ... muy alto.",
+    let overview:  String           //"La familia Recchi pertenece ... muy alto.",
     let poster_path: String?         //"/oPxRjbXA90tNLZAERpCQbRPSXQx.jpg"
     
     
