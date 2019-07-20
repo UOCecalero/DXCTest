@@ -21,6 +21,7 @@ class DetailViewController: UIViewController {
     
     var scroll: UIScrollView = {
         let sv = UIScrollView()
+        sv.contentInset = UIEdgeInsets(top: 0,left: 0,bottom: 50,right: 0)
         sv.translatesAutoresizingMaskIntoConstraints = false
         return sv
         
@@ -94,8 +95,14 @@ extension DetailViewController: DetailViewProtocol {
         
         guard let film = film else {return}
         
+        
+        
+        
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.prefersLargeTitles = false
+        navigationController?.navigationItem.largeTitleDisplayMode = .never
+        
         navigationItem.title = film.title
-        navigationController?.navigationBar.prefersLargeTitles = true
         
         overview.text = film.overview
         
