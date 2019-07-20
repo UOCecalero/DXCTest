@@ -26,10 +26,20 @@ class MainPresenter: MainPresenterProtocol {
         interactor?.getFilmsCollection(query)
     }
     
+    func getMoreFilms(_ query: String){
+        interactor?.getMoreFilms(query)
+    }
+    
     func showSearchResults(_ films: [Film]) {
         
         guard let view = view else {return}
         view.filmsArray = films
+    }
+    
+    func addResults(_ films: [Film]){
+        
+        guard let view = view else {return}
+        view.filmsArray?.append(contentsOf: films)
     }
     
     func goToDetail(with film: Film) {

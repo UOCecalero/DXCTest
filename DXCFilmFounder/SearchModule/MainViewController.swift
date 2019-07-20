@@ -30,7 +30,7 @@ class MainViewController: UIViewController {
         return sc
     }()
     
-//    var timer: Timer?
+    var currentQuery: String?
 
     var filmsArray: [Film]? {
         didSet {
@@ -68,8 +68,7 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: MainViewProtocol {
-    
-    
+
     func setUpView() {
         
         view.addSubview(tableView)
@@ -132,13 +131,7 @@ extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else {return}
         
-//        if let timer = timer { timer.invalidate() }
-//        timer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: {timer in
-//            self.presenter?.getFilmsCollection(text)
-//            print(text)
-//
-//        })
-        
+        currentQuery = text
         self.presenter?.getFilmsCollection(text)
         print(text)
     }
@@ -149,9 +142,23 @@ extension MainViewController: UISearchResultsUpdating {
         
     }
     
-    func showReults() {
+
+}
+
+extension MainViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
+        if (scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height)) {
+            
+            guard let currentQuery = currentQuery else {return}
+            guard currentQuery != "" else {return}
+            
+            presenter?.getMoreFilms(currentQuery)
+            
+        }
         
     }
-
+    
+    
 }
