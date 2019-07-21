@@ -22,7 +22,7 @@ struct Film: Codable {
     let id: Int64                   //41110,
     let video: Bool?                 //false,
     let vote_count: Int?             //151,
-    let vote_average: Double?           //7,
+    let vote_average: Float           //7,
     let title: String               //"Yo soy el amor",
     let release_date: String          //"2009-09-05",
     let original_language: String   //"it",

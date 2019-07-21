@@ -38,6 +38,13 @@ class DetailViewController: UIViewController {
     }()
     
     
+    var rating: FiveStarStack = {
+        let fs = FiveStarStack(frame: .zero)
+        fs.translatesAutoresizingMaskIntoConstraints = false
+        return fs
+    }()
+    
+    
     var overview: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -66,6 +73,7 @@ extension DetailViewController: DetailViewProtocol {
         
         view.addSubview(scroll)
         scroll.addSubview(portada)
+        scroll.addSubview(rating)
         scroll.addSubview(overview)
         //        addSubview(rating)
         
@@ -82,8 +90,14 @@ extension DetailViewController: DetailViewProtocol {
         portada.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 50),
         
         
+        rating.heightAnchor.constraint(equalToConstant: 50),
+        rating.widthAnchor.constraint(equalTo: scroll.widthAnchor, multiplier: 0.8),
+        rating.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: 50),
+        rating.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 470),
+        
+        
         overview.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.8),
-        overview.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 480),
+        overview.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 530),
         overview.bottomAnchor.constraint(equalTo: scroll.bottomAnchor, constant: 50),
         overview.leadingAnchor.constraint(equalTo: scroll.leadingAnchor, constant: 50),
         
@@ -115,6 +129,8 @@ extension DetailViewController: DetailViewProtocol {
                 }
             }
         }
+        
+        rating.rating = film.vote_average
 
         
     }

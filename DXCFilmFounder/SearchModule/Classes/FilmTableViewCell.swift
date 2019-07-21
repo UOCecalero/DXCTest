@@ -44,6 +44,12 @@ class FilmTableViewCell: UITableViewCell {
         return label
     }()
     
+    var rating: FiveStarStack = {
+        let fs = FiveStarStack(frame: .zero)
+        fs.translatesAutoresizingMaskIntoConstraints = false
+        return fs
+    }()
+    
     //Falta rating
 
     override func awakeFromNib() {
@@ -68,6 +74,7 @@ class FilmTableViewCell: UITableViewCell {
         
         addSubview(portada)
         addSubview(titulo)
+        addSubview(rating)
         addSubview(overview)
 //        addSubview(rating)
     
@@ -88,6 +95,9 @@ class FilmTableViewCell: UITableViewCell {
                 }
             }
         }
+        
+        self.rating.rating = film?.vote_average
+
  
     }
     
@@ -104,9 +114,15 @@ class FilmTableViewCell: UITableViewCell {
             titulo.heightAnchor.constraint(equalToConstant: 50),
             titulo.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
             titulo.topAnchor.constraint(equalTo: portada.bottomAnchor, constant: 20),
-        
+            
+            rating.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
+            rating.heightAnchor.constraint(equalToConstant: 50),
+            rating.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50),
+            rating.topAnchor.constraint(equalTo: topAnchor, constant: 270),
+
+            
             overview.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.8),
-            overview.topAnchor.constraint(equalTo: topAnchor, constant: 270),
+            overview.topAnchor.constraint(equalTo: topAnchor, constant: 320),
             overview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50)
            

@@ -69,7 +69,6 @@ extension MainViewController: MainViewProtocol {
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-
             
             tableView.widthAnchor.constraint(equalTo: view.widthAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
