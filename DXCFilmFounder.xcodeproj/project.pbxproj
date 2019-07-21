@@ -24,7 +24,6 @@
 		34C2627922E2479800F79408 /* DetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627822E2479800F79408 /* DetailRouter.swift */; };
 		34C2627B22E2496700F79408 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627A22E2496700F79408 /* DetailViewController.swift */; };
 		34C2627E22E24D5B00F79408 /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627D22E24D5B00F79408 /* DetailPresenter.swift */; };
-		34C2628022E2539A00F79408 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627F22E2539A00F79408 /* SessionController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,7 +46,6 @@
 		34C2627822E2479800F79408 /* DetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRouter.swift; sourceTree = "<group>"; };
 		34C2627A22E2496700F79408 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		34C2627D22E24D5B00F79408 /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
-		34C2627F22E2539A00F79408 /* SessionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,7 +80,6 @@
 			children = (
 				34C2624F22E1DF7500F79408 /* AppDelegate.swift */,
 				34C2625122E1DF7500F79408 /* ViewController.swift */,
-				34C2627C22E24C9600F79408 /* Controllers */,
 				34C2626122E1E0C500F79408 /* SearchModule */,
 				34C2627122E246C400F79408 /* DetailModule */,
 				34C2625322E1DF7500F79408 /* Main.storyboard */,
@@ -125,14 +122,6 @@
 				34C2627822E2479800F79408 /* DetailRouter.swift */,
 			);
 			path = DetailModule;
-			sourceTree = "<group>";
-		};
-		34C2627C22E24C9600F79408 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				34C2627F22E2539A00F79408 /* SessionController.swift */,
-			);
-			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -210,7 +199,6 @@
 				34C2626322E1E10800F79408 /* MainViewController.swift in Sources */,
 				34C2627522E2477100F79408 /* DetailProtocols.swift in Sources */,
 				34C2625222E1DF7500F79408 /* ViewController.swift in Sources */,
-				34C2628022E2539A00F79408 /* SessionController.swift in Sources */,
 				34C2627922E2479800F79408 /* DetailRouter.swift in Sources */,
 				34C2627E22E24D5B00F79408 /* DetailPresenter.swift in Sources */,
 				34C2627722E2478200F79408 /* DetailInteractor.swift in Sources */,

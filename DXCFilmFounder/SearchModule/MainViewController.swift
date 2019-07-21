@@ -32,12 +32,7 @@ class MainViewController: UIViewController {
     
     var currentQuery: String?
 
-    var filmsArray: [Film]? {
-        didSet {
-            tableView.reloadData()
-            tableView.tableFooterView = UIView(frame: CGRect.zero)
-        }
-    }
+    var filmsArray: [Film]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +42,7 @@ class MainViewController: UIViewController {
         //UITableViewConfig
         tableView.delegate = self
         tableView.dataSource = self
+
         
         //NavItem Config
         navigationItem.title = "Películas"
@@ -57,8 +53,7 @@ class MainViewController: UIViewController {
         //UISearchController Config
         navigationItem.searchController = searchController
         searchController.searchResultsUpdater = self
-        
-        presenter?.viewDidLoad()
+    
         setUpView()
 
 
@@ -68,7 +63,7 @@ class MainViewController: UIViewController {
 }
 
 extension MainViewController: MainViewProtocol {
-
+    
     func setUpView() {
         
         view.addSubview(tableView)
@@ -85,15 +80,37 @@ extension MainViewController: MainViewProtocol {
         
     }
     
+    func setTable(_ films: [Film]) {
+        filmsArray = films
+        tableView.reloadData()
+        tableView.tableFooterView = UIView(frame: CGRect.zero)
+    }
+    
+    func addRows(_ films: [Film]) {
+        
+        filmsArray?.append(contentsOf: films)
+        tableView.reloadData()
+//        tableView.numberOfRows(inSection: 0)
+        
+//        guard let currentRows = filmsArray?.count else {return}
+//        filmsArray?.append(contentsOf: films)
+//
+//        var indexPaths: [IndexPath] = []
+//        for index in currentRows...(currentRows+films.count){
+//            indexPaths.append(IndexPath(row: index, section: 0))
+//        }
+//
+//        tableView.insertRows(at: indexPaths, with: .none)
+        
+    }
+    
     func showAlert(_ message: String) {
         let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         present(alertController, animated: true, completion: nil)
     }
+    
 
-    
-    
-    
 }
 
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
@@ -105,9 +122,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let film = filmsArray?[indexPath.row]
-        
         let celda = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as! FilmTableViewCell
-        
         celda.film = film
         
         return celda
@@ -120,9 +135,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
     }
-    
-    
-    
+
 }
 
 
@@ -131,15 +144,10 @@ extension MainViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         guard let text = searchController.searchBar.text else {return}
         
+        guard text != "" else {return}
         currentQuery = text
         self.presenter?.getFilmsCollection(text)
         print(text)
-    }
-
-    func showSearchResults(_ films: [Film]) {
-        
-        print(films)
-        
     }
     
 
@@ -148,8 +156,8 @@ extension MainViewController: UISearchResultsUpdating {
 extension MainViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if (scrollView.contentOffset.y >= (scrollView.contentSize.height - scrollView.frame.size.height)) {
+            
+            if ( (scrollView.contentSize.height - scrollView.contentOffset.y) < scrollView.frame.size.height){
             
             guard let currentQuery = currentQuery else {return}
             guard currentQuery != "" else {return}

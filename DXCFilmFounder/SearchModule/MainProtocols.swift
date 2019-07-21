@@ -19,7 +19,8 @@ protocol MainViewProtocol: class {
     func setUpView()
     func showAlert(_ message: String)
     
-//    func showSearchResults(_ films: [Film])
+    func setTable(_ films: [Film])
+    func addRows(_ films: [Film])
     
     
 }
@@ -29,18 +30,26 @@ protocol MainPresenterProtocol: class {
     var view: MainViewProtocol? { get set }
     var interactor: MainInteractorProtocol? { get set }
     var router: MainRouterProtocol? { get set }
+
     
-    func viewDidLoad()
+    //PRESENTER -> INTERACTOR
     func getFilmsCollection(_ query: String)
     func getMoreFilms(_ query: String)
     
-    func showSearchResults(_ films: [Film])
-    func addResults(_ films: [Film])
-    func goToDetail(with film: Film)
     
+    //PRESENTER -> VIEW
+    func setTable(_ films: [Film])
+    func addRows(_ films: [Film])
     func showAlert(_ message: String)
+    
+    
+    //PRESENTER -> ROUTER
+    func goToDetail(with film: Film)
+
 
 }
+
+
 protocol MainInteractorProtocol: class {
     
     var presenter: MainPresenterProtocol? { get set }

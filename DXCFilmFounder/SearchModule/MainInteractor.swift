@@ -86,7 +86,7 @@ class MainInteractor: MainInteractorProtocol {
                         let page = try JSONDecoder().decode(FilmCollectionPage.self, from: data)
                         guard let results = page.results else {return}
                         DispatchQueue.main.async {
-                            self.presenter?.showSearchResults(results)
+                            self.presenter?.setTable(results)
                         }
                         
                         
@@ -111,6 +111,7 @@ class MainInteractor: MainInteractorProtocol {
     func getMoreFilms(_ query: String){
         
         pager += 1
+        print(pager)
         
         var components = URLComponents()
         components.scheme = "https"
@@ -162,7 +163,7 @@ class MainInteractor: MainInteractorProtocol {
                     let page = try JSONDecoder().decode(FilmCollectionPage.self, from: data)
                     guard let results = page.results else {return}
                     DispatchQueue.main.async {
-                        self.presenter?.addResults(results)
+                        self.presenter?.addRows(results)
                     }
                     
                     

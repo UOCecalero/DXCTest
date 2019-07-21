@@ -14,14 +14,7 @@ class MainPresenter: MainPresenterProtocol {
     var interactor: MainInteractorProtocol?
     var router: MainRouterProtocol?
 
-    func viewDidLoad() {
-
-    }
-    
-    func showAlert(_ message: String) {
-        view?.showAlert(message)
-    }
-    
+    //PRESENTER -> INTERACTOR
     func getFilmsCollection(_ query: String) {
         interactor?.getFilmsCollection(query)
     }
@@ -30,25 +23,28 @@ class MainPresenter: MainPresenterProtocol {
         interactor?.getMoreFilms(query)
     }
     
-    func showSearchResults(_ films: [Film]) {
-        
-        guard let view = view else {return}
-        view.filmsArray = films
+    func showAlert(_ message: String) {
+        view?.showAlert(message)
     }
     
-    func addResults(_ films: [Film]){
-        
+    //PRESENTER -> VIEW
+    func setTable(_ films: [Film]) {
         guard let view = view else {return}
-        view.filmsArray?.append(contentsOf: films)
+        view.setTable(films)
     }
     
+    func addRows(_ films: [Film]) {
+        guard let view = view else {return}
+        view.addRows(films)
+    }
+    
+    
+    //PRESENTER ->ROUTER
     func goToDetail(with film: Film) {
         
         guard let view = view else {return}
         router?.goToDetail(from: view, with: film)
     }
-    
-    
     
     
 }
