@@ -24,6 +24,7 @@
 		34C2627922E2479800F79408 /* DetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627822E2479800F79408 /* DetailRouter.swift */; };
 		34C2627B22E2496700F79408 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627A22E2496700F79408 /* DetailViewController.swift */; };
 		34C2627E22E24D5B00F79408 /* DetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34C2627D22E24D5B00F79408 /* DetailPresenter.swift */; };
+		34E0DF6422E923BB008FFFEF /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E0DF6322E923BB008FFFEF /* LoadingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		34C2627822E2479800F79408 /* DetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailRouter.swift; sourceTree = "<group>"; };
 		34C2627A22E2496700F79408 /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		34C2627D22E24D5B00F79408 /* DetailPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailPresenter.swift; sourceTree = "<group>"; };
+		34E0DF6322E923BB008FFFEF /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +110,7 @@
 			children = (
 				34C2626D22E1E8B900F79408 /* Codables.swift */,
 				34C2626F22E1F11B00F79408 /* FilmTableViewCell.swift */,
+				34E0DF6322E923BB008FFFEF /* LoadingTableViewCell.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -200,6 +203,7 @@
 				34C2627522E2477100F79408 /* DetailProtocols.swift in Sources */,
 				34C2625222E1DF7500F79408 /* ViewController.swift in Sources */,
 				34C2627922E2479800F79408 /* DetailRouter.swift in Sources */,
+				34E0DF6422E923BB008FFFEF /* LoadingTableViewCell.swift in Sources */,
 				34C2627E22E24D5B00F79408 /* DetailPresenter.swift in Sources */,
 				34C2627722E2478200F79408 /* DetailInteractor.swift in Sources */,
 				34C2626B22E1E16600F79408 /* MainProtocols.swift in Sources */,

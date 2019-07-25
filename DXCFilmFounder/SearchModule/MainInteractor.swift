@@ -11,6 +11,7 @@ import Foundation
 class MainInteractor: MainInteractorProtocol {
     
     weak var presenter: MainPresenterProtocol?
+    var gettingMoreFilms = false
     
     let session: URLSession = {
         let config = URLSessionConfiguration.default
@@ -20,14 +21,15 @@ class MainInteractor: MainInteractorProtocol {
         return URLSession(configuration: config)
     }()
     
-    
-    
     var dataTask: URLSessionDataTask?
     var buffer: [URLSessionDataTask]?
     var pager: Int = 1
     
     
     func getFilmsCollection(_ query: String) {
+        
+        guard !gettingMoreFilms else {return}
+        gettingMoreFilms = true
         
         buffer?.forEach({$0.cancel()})
         buffer?.removeAll()
@@ -57,6 +59,7 @@ class MainInteractor: MainInteractorProtocol {
                 
                 if let error = error {
                     print("FILMS Session Client Error: \(error)")
+                    self.gettingMoreFilms = false
                     return
                 }
                 guard let httpResponse = response as? HTTPURLResponse else {
@@ -64,6 +67,7 @@ class MainInteractor: MainInteractorProtocol {
                     fatalError()
                 }
                 if httpResponse.statusCode == 404 {
+                    self.gettingMoreFilms = false
                     return
                 }
                 
@@ -77,6 +81,7 @@ class MainInteractor: MainInteractorProtocol {
                             print("Error Body : \(errorBody)")
                         }
                     }
+                    self.gettingMoreFilms = false
                     return
                 }
                 if let data = data {
@@ -87,6 +92,7 @@ class MainInteractor: MainInteractorProtocol {
                         guard let results = page.results else {return}
                         DispatchQueue.main.async {
                             self.presenter?.setTable(results)
+                            self.gettingMoreFilms = false
                         }
                         
                         
@@ -109,6 +115,9 @@ class MainInteractor: MainInteractorProtocol {
     }
     
     func getMoreFilms(_ query: String){
+        
+        guard !gettingMoreFilms else {return}
+        gettingMoreFilms = true
         
         pager += 1
         print(pager)
@@ -141,6 +150,7 @@ class MainInteractor: MainInteractorProtocol {
                 fatalError()
             }
             if httpResponse.statusCode == 404 {
+                self.gettingMoreFilms = false
                 return
             }
             
@@ -154,6 +164,7 @@ class MainInteractor: MainInteractorProtocol {
                         print("Error Body : \(errorBody)")
                     }
                 }
+                self.gettingMoreFilms = false
                 return
             }
             if let data = data {
@@ -164,6 +175,7 @@ class MainInteractor: MainInteractorProtocol {
                     guard let results = page.results else {return}
                     DispatchQueue.main.async {
                         self.presenter?.addRows(results)
+                        self.gettingMoreFilms = false
                     }
                     
                     

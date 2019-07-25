@@ -12,6 +12,7 @@ class MainViewController: UIViewController {
     
     var presenter: MainPresenterProtocol?
     
+    
     var tableView: UITableView = {
         
         let tv = UITableView(frame: .zero, style: .plain)
@@ -19,6 +20,7 @@ class MainViewController: UIViewController {
         tv.separatorStyle = .none
         tv.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
         tv.register(FilmTableViewCell.self, forCellReuseIdentifier: "FilmTableViewCell")
+        tv.register(LoadingTableViewCell.self, forCellReuseIdentifier: "LoadingTableViewCell")
         return tv
     }()
     
@@ -116,16 +118,29 @@ extension MainViewController: MainViewProtocol {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if section == 0 {
         return filmsArray?.count ?? 0
+        } else if section == 1 {
+            return 1
+        }
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0{
+            
+            let film = filmsArray?[indexPath.row]
+            let celda = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as! FilmTableViewCell
+            celda.film = film
+            return celda
+            
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "LoadingCTableViewCell", for: indexPath) as! LoadingTableViewCell
+            cell.activityIndicator.startAnimating()
+            return cell
+        }
         
-        let film = filmsArray?[indexPath.row]
-        let celda = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as! FilmTableViewCell
-        celda.film = film
-        
-        return celda
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -156,8 +171,14 @@ extension MainViewController: UISearchResultsUpdating {
 extension MainViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        print("CONTENTSIZE: \(scrollView.contentSize.height)")
+        print("CONTENTOFFSETY: \(scrollView.contentOffset.y)")
+        print("FRAME HEIGHT: \(scrollView.frame.size.height)")
             
             if ( (scrollView.contentSize.height - scrollView.contentOffset.y) < scrollView.frame.size.height){
+                
+            print("SCROLLS")
             
             guard let currentQuery = currentQuery else {return}
             guard currentQuery != "" else {return}
