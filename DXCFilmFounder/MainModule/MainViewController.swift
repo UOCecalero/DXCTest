@@ -34,7 +34,7 @@ class MainViewController: UIViewController {
     
     var currentQuery: String?
 
-    var filmsArray: [Film]?
+    var itemsArray: [Film]?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,14 +83,14 @@ extension MainViewController: MainViewProtocol {
     }
     
     func setTable(_ films: [Film]) {
-        filmsArray = films
+        itemsArray = films
         tableView.reloadData()
         tableView.tableFooterView = UIView(frame: CGRect.zero)
     }
     
     func addRows(_ films: [Film]) {
         
-        filmsArray?.append(contentsOf: films)
+        itemsArray?.append(contentsOf: films)
         tableView.reloadData()
 //        tableView.numberOfRows(inSection: 0)
         
@@ -120,7 +120,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if section == 0 {
-        return filmsArray?.count ?? 0
+        return itemsArray?.count ?? 0
         } else if section == 1 {
             return 1
         }
@@ -130,7 +130,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0{
             
-            let film = filmsArray?[indexPath.row]
+            let film = itemsArray?[indexPath.row]
             let celda = tableView.dequeueReusableCell(withIdentifier: "FilmTableViewCell", for: indexPath) as! FilmTableViewCell
             celda.film = film
             return celda
@@ -145,7 +145,7 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let film = filmsArray?[indexPath.row] else {return}
+        guard let film = itemsArray?[indexPath.row] else {return}
         presenter?.goToDetail(with: film)
         tableView.deselectRow(at: indexPath, animated: true)
         
@@ -161,7 +161,7 @@ extension MainViewController: UISearchResultsUpdating {
         
         guard text != "" else {return}
         currentQuery = text
-        self.presenter?.getFilmsCollection(text)
+        self.presenter?.fetchItems(text)
         print(text)
     }
     

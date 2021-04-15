@@ -15,8 +15,8 @@ class MainPresenter: MainPresenterProtocol {
     var router: MainRouterProtocol?
 
     //PRESENTER -> INTERACTOR
-    func getFilmsCollection(_ query: String) {
-        interactor?.getFilmsCollection(query)
+    func fetchItems(_ query: String) {
+        interactor?.fetchItems(query)
     }
     
     func getMoreFilms(_ query: String){

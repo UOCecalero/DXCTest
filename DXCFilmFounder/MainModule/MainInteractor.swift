@@ -26,7 +26,7 @@ class MainInteractor: MainInteractorProtocol {
     var pager: Int = 1
     
     
-    func getFilmsCollection(_ query: String) {
+    func fetchItems(_ query: String) {
         
         guard !gettingMoreFilms else {return}
         gettingMoreFilms = true
