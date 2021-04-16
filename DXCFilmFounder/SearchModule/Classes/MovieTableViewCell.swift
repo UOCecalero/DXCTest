@@ -8,17 +8,13 @@
 
 import UIKit
 
-class FilmTableViewCell: UITableViewCell {
+class MovieTableViewCell: UITableViewCell {
     
-    var film: Film? {
-        didSet{
-            guard film != nil else {return}
-            setupCell()
-        }
-    }
+    var item: MovieModel?
+
+    static let reuseIdentif = "MovieTableViewCell"
     
     var portada: UIImageView = {
-        
         let iv = UIImageView(frame: .zero)
         iv.backgroundColor = .black
         iv.clipsToBounds = true
@@ -43,8 +39,6 @@ class FilmTableViewCell: UITableViewCell {
         label.numberOfLines = 0
         return label
     }()
-    
-    //Falta rating
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -73,13 +67,18 @@ class FilmTableViewCell: UITableViewCell {
     
         setupView()
     }
+
+    func configrue(with item: MovieModel) {
+        self.item = item
+        setupCell()
+    }
     
     private func setupCell() {
         
-        self.titulo.text = film?.title
-        self.overview.text = film?.overview
+        self.titulo.text = item?.name
+        self.overview.text = item?.overview
         
-        if let poster = film?.poster_path {
+        if let poster = item?.posterPath {
             if let url = URL(string: "https://image.tmdb.org/t/p/w500\(poster)"){
                 if let data = try? Data(contentsOf: url)
                 {
@@ -109,9 +108,8 @@ class FilmTableViewCell: UITableViewCell {
             overview.topAnchor.constraint(equalTo: topAnchor, constant: 270),
             overview.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50),
             overview.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 50)
-           
-            
-        
+
+
         ])
         
     }

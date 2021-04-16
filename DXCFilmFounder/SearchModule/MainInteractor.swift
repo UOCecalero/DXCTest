@@ -8,191 +8,44 @@
 
 import Foundation
 
-class MainInteractor: MainInteractorProtocol {
-    
-    weak var presenter: MainPresenterProtocol?
-    var gettingMoreFilms = false
-    
-    let session: URLSession = {
-        let config = URLSessionConfiguration.default
-        config.waitsForConnectivity = true
-        config.httpAdditionalHeaders = ["Authorization" : "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZmM1ZmY3Zjc2NThjMjk2ZGMxODlmOTNlNTMzY2JjOSIsInN1YiI6IjVkMzFkZmE0Y2FhYjZkMzFiMmEzZDQxYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.at6dD6L5d9a_p9tPv-A9ThvMvnCEXnlHE_yVpf-sW9M"]
-        config.timeoutIntervalForRequest = 2
-        return URLSession(configuration: config)
-    }()
-    
-    var dataTask: URLSessionDataTask?
-    var buffer: [URLSessionDataTask]?
-    var pager: Int = 1
-    
-    
-    func getFilmsCollection(_ query: String) {
-        
-        guard !gettingMoreFilms else {return}
-        gettingMoreFilms = true
-        
-        buffer?.forEach({$0.cancel()})
-        buffer?.removeAll()
-       
-        guard query != "" else {return}
-        
-        pager = 1
-        dataTask?.cancel()
-        
-    
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.themoviedb.org"
-        components.path = "/4/search/movie"
-        components.queryItems = [
-            URLQueryItem(name: "query", value: query),
-            URLQueryItem(name: "include_adult", value: "false"),
-            URLQueryItem(name: "page", value: String(pager)),
-            URLQueryItem(name: "language", value: "es-ES")
-        ]
+enum MainInteractorError: Error {
+    case APIError(Error?)
+    case uknown(Error?)
+}
 
-            
-        guard let url = components.url else { return }
-        
-        dataTask = session.dataTask(with: url) { data, response, error in
-                defer { self.dataTask = nil }
-                
-                if let error = error {
-                    print("FILMS Session Client Error: \(error)")
-                    self.gettingMoreFilms = false
-                    return
-                }
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    print("FILMS RESPONSE ERROR: \(response!)")
-                    fatalError()
-                }
-                if httpResponse.statusCode == 404 {
-                    self.gettingMoreFilms = false
-                    return
-                }
-                
-                guard (200...299).contains(httpResponse.statusCode) else {
-                    print("FILMS HTTP REQUEST ERROR \(httpResponse.statusCode)")
-                    
-                    if let data = data  {
-                        
-                        if let errorBody = String(data: data, encoding: String.Encoding.utf8)
-                        {
-                            print("Error Body : \(errorBody)")
-                        }
-                    }
-                    self.gettingMoreFilms = false
-                    return
-                }
-                if let data = data {
-                    
-                    do {
-                        
-                        let page = try JSONDecoder().decode(FilmCollectionPage.self, from: data)
-                        guard let results = page.results else {return}
-                        DispatchQueue.main.async {
-                            self.presenter?.setTable(results)
-                            self.gettingMoreFilms = false
-                        }
-                        
-                        
-                    } catch {
-                        
-                        print("FILMS PARSING ERROR: \(error)")
-                        fatalError()
-                        
-                    }
-                    
-                }
-            }
-     
-            dataTask?.resume()
-        }
-    
-    func getFilm(_ id: Int) {
-        
-        //Future use
+final class MainInteractor: MainInteractorProtocol {
+
+    weak var presenter: MainPresenterProtocol?
+    let apiDataManager : APIDataManager
+//    let localStorageManager:
+
+    init(apiDataManager: APIDataManager = APIDataManager()) {
+        self.apiDataManager = apiDataManager
     }
-    
-    func getMoreFilms(_ query: String){
-        
-        guard !gettingMoreFilms else {return}
-        gettingMoreFilms = true
-        
-        pager += 1
-        print(pager)
-        
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.themoviedb.org"
-        components.path = "/4/search/movie"
-        components.queryItems = [
-            URLQueryItem(name: "query", value: query),
-            URLQueryItem(name: "include_adult", value: "false"),
-            URLQueryItem(name: "page", value: String(pager)),
-            URLQueryItem(name: "language", value: "es-ES")
-        ]
-        
-        
-        guard let url = components.url else { return }
-        
-        var request = URLRequest(url: url)
-        
-        let dataTask = session.dataTask(with: request) { data, response, error in
-            defer { self.dataTask = nil }
-            
-            if let error = error {
-                print("FILMS Session Client Error: \(error)")
-                fatalError()
-            }
-            guard let httpResponse = response as? HTTPURLResponse else {
-                print("FILMS RESPONSE ERROR: \(response!)")
-                fatalError()
-            }
-            if httpResponse.statusCode == 404 {
-                self.gettingMoreFilms = false
-                return
-            }
-            
-            guard (200...299).contains(httpResponse.statusCode) else {
-                print("FILMS HTTP REQUEST ERROR \(httpResponse.statusCode)")
-                
-                if let data = data  {
-                    
-                    if let errorBody = String(data: data, encoding: String.Encoding.utf8)
-                    {
-                        print("Error Body : \(errorBody)")
+
+    func getPopularSeries(completion: @escaping (Result<[MovieModel], MainInteractorError>)->Void) {
+
+        apiDataManager.fetchMovies { result in
+
+            switch result {
+                case .success(let moviesArray):
+                    completion(.success(moviesArray))
+                    return
+
+                case .failure(let error):
+                    switch error {
+                    default:
+                        completion(.failure(.APIError(error)))
                     }
-                }
-                self.gettingMoreFilms = false
-                return
-            }
-            if let data = data {
-                
-                do {
-                    
-                    let page = try JSONDecoder().decode(FilmCollectionPage.self, from: data)
-                    guard let results = page.results else {return}
-                    DispatchQueue.main.async {
-                        self.presenter?.addRows(results)
-                        self.gettingMoreFilms = false
-                    }
-                    
-                    
-                } catch {
-                    
-                    print("FILMS PARSING ERROR: \(error)")
-                    fatalError()
-                    
-                }
-                
             }
         }
-        
-        buffer?.append(dataTask)
-        dataTask.resume()
-        
+
+
     }
+
+
+    
+
     
 }
 

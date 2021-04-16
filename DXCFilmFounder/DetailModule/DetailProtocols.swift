@@ -10,14 +10,11 @@ import UIKit
 
 protocol DetailViewProtocol: class {
     
-    var presenter: DetailPresenterProtocol? {get set}
-    var film: Film? {get set}
-    
-    
-    func setUpView()
-    func showAlert(_ message: String)
-    
-    
+    var presenter: DetailPresenterProtocol? { get set }
+    var item: MovieModel?                   { get set }
+
+    func showAlert(title: String, message: String)
+
 }
 
 protocol DetailPresenterProtocol: class {
@@ -27,24 +24,17 @@ protocol DetailPresenterProtocol: class {
     var router: DetailRouterProtocol? { get set }
     
     func viewDidLoad()
-    
-//    func showSearchResults(_ film: Film)
 
 }
 
 protocol DetailInteractorProtocol: class {
-    
+
     var presenter: DetailPresenterProtocol? { get set }
-    
-//    var film: Film {get set}
-    
-//    func getFilm(_ id: Int)
-    
-    
+
 }
 
 protocol DetailRouterProtocol: class {
     
-    static func createDetailViewController(with film: Film) -> UIViewController
+    static func createDetailViewController(with item: MovieModel) -> UIViewController
     
 }

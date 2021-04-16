@@ -23,10 +23,6 @@ class DetailPresenter: DetailPresenterProtocol {
         
     }
     
-    func showAlert(_ message: String) {
-        view?.showAlert(message)
-    }    
-    
     
     
 }

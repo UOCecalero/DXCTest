@@ -9,41 +9,37 @@
 import Foundation
 
 class MainPresenter: MainPresenterProtocol {
-    
+
     weak var view: MainViewProtocol?
     var interactor: MainInteractorProtocol?
     var router: MainRouterProtocol?
 
-    //PRESENTER -> INTERACTOR
-    func getFilmsCollection(_ query: String) {
-        interactor?.getFilmsCollection(query)
+    var itemsArray = [MovieModel]()
+
+    func viewDidAppear() {
+        interactor?.getPopularSeries { [weak self] result in
+            switch result {
+            case .success(let moviesArray):
+                self?.itemsArray = moviesArray
+                self?.view?.refresh()
+            case .failure(let error):
+                switch error {
+                case .APIError(let error):
+                    self?.view?.showAlert(title:"Server Error", message: error?.localizedDescription)
+                case .uknown(let error):
+                    self?.view?.showAlert(title:"UKnown Error", message: error?.localizedDescription)
+                }
+            }
+        }
     }
-    
-    func getMoreFilms(_ query: String){
-        interactor?.getMoreFilms(query)
-    }
-    
-    func showAlert(_ message: String) {
-        view?.showAlert(message)
-    }
-    
-    //PRESENTER -> VIEW
-    func setTable(_ films: [Film]) {
-        guard let view = view else {return}
-        view.setTable(films)
-    }
-    
-    func addRows(_ films: [Film]) {
-        guard let view = view else {return}
-        view.addRows(films)
-    }
-    
-    
-    //PRESENTER ->ROUTER
-    func goToDetail(with film: Film) {
-        
-        guard let view = view else {return}
-        router?.goToDetail(from: view, with: film)
+
+    func didSelectRow(_ indexpath: IndexPath) {
+        guard let view = view,
+              indexpath.row < itemsArray.count
+        else { return }
+
+        let movieModel = itemsArray[indexpath.row]
+        router?.goToDetail(from: view, with: movieModel)
     }
     
     

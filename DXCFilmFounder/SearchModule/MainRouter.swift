@@ -39,7 +39,7 @@ class MainRouter: MainRouterProtocol {
             return mainViewController
         }
     
-    func goToDetail(from view: MainViewProtocol, with film: Film) {
+    func goToDetail(from view: MainViewProtocol, with film: MovieModel) {
             
         let detailViewController = DetailRouter.createDetailViewController(with: film)
         
