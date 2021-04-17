@@ -12,8 +12,11 @@ protocol MainViewProtocol: class {
     
     var presenter: MainPresenterProtocol?   { get set }
 
-    func refresh()
+    var items: [MovieModel] { get set }
+
+    func show(items: [MovieModel])
     func showSpinner()
+    func hideSpinner()
     func showAlert(title: String, message: String?)
 }
 
@@ -23,19 +26,19 @@ protocol MainPresenterProtocol: class {
     var interactor: MainInteractorProtocol? { get set }
     var router: MainRouterProtocol?         { get set }
 
-    var itemsArray: [MovieModel]            { get set }
-
-
-    //MARK: View -> Prsenter
     func viewDidAppear()
     func viewDidLoad()
-    func didSelectRow(_ indexpath: IndexPath)
+    func scrolldidReachEnd()
+    func reset()
+    func didSelectRow(with item: MovieModel)
+
+    func show(items: [MovieModel])
+    func showSpinner()
+    func hideSpinner()
+    func showAlert(title: String, message: String?)
 
 }
 
-extension MainPresenterProtocol {
-    func viewDidLoad() {}
-}
 
 typealias FetchResult<T: Decodable, E: Error> = ((Result<T, E>)->())
 
@@ -43,9 +46,21 @@ protocol MainInteractorProtocol: class {
     
     var presenter: MainPresenterProtocol?      { get set }
 
-    func getPopularSeries(completion: @escaping (Result<[MovieModel], MainInteractorError>)->Void) 
+    func getPopularSeries()
+    func reloadStorage()
+
+//    func getPopularSeries(completion: @escaping (Result<[MovieModel], MainInteractorError>)->Void)
 
 }
+
+protocol MainRouterProtocol: class {
+
+    static func createMainViewController() -> UIViewController
+
+    func goToDetail(from view: MainViewProtocol, with item: MovieModel)
+
+}
+
 
 enum APIDataManagerError: Error {
     case invalidStatusCode(Int, String?)
@@ -70,37 +85,64 @@ extension MainDataManagerProtocol {
 
     func fetchItems(from requestBuilder: RequestBuilder, completion: @escaping FetchResult<T,E>) where E == APIDataManagerError {
 
+        print("""
+                    API CALL *************************************************************
+                    \(requestBuilder.urlRequest.description)
+                    **********************************************************************
+            """)
+
         session.dataTask(with: requestBuilder.urlRequest) { data, response, error in
-//            defer { self.dataTask = nil }
 
             if let error = error {
-                completion(.failure(.uknown(error)))
+                DispatchQueue.main.async {
+                    completion(.failure(.uknown(error)))
+                }
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                completion(.failure(.httpResponseError(nil)))
+                DispatchQueue.main.async {
+                    completion(.failure(.httpResponseError(nil)))
+                }
                 return
             }
 
             if httpResponse.statusCode == 404 {
-                completion(.failure(.notFoundError))
+                DispatchQueue.main.async {
+                    completion(.failure(.notFoundError))
+                }
                 return
             }
 
             guard (200...299).contains(httpResponse.statusCode) else {
                 if let data = data, let stringError = String(data: data, encoding: String.Encoding.utf8)  {
-                    completion(.failure(.invalidStatusCode(httpResponse.statusCode, stringError)))
+                    DispatchQueue.main.async {
+                        completion(.failure(.invalidStatusCode(httpResponse.statusCode, stringError)))
+                    }
                     return
                 } else {
-                    completion(.failure(.invalidStatusCode(httpResponse.statusCode, nil)))
+                    DispatchQueue.main.async {
+                        completion(.failure(.invalidStatusCode(httpResponse.statusCode, nil)))
+                    }
                     return
                 }
             }
 
 
-            guard let data = data else { completion(.failure(.uknown(nil))); return}
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(.failure(.uknown(nil)))
+                }
+                return
+            }
 
-            guard let resultsModel = try? newJSONDecoder().decode(T.self, from: data) else { completion(.failure(.JSONdecodingError)); return }
+            guard let resultsModel = try? newJSONDecoder().decode(T.self, from: data)
+            else {
+                DispatchQueue.main.async {
+                completion(.failure(.JSONdecodingError))
+                }
+                return
+            }
+
             DispatchQueue.main.async {
                 completion(.success(resultsModel))
                 return
@@ -109,13 +151,4 @@ extension MainDataManagerProtocol {
         }.resume()
 
     }
-}
-
-
-protocol MainRouterProtocol: class {
-    
-    static func createMainViewController() -> UIViewController
-    
-    func goToDetail(from view: MainViewProtocol, with item: MovieModel)
-    
 }

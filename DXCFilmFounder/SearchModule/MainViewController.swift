@@ -9,8 +9,11 @@
 import UIKit
 
 final class MainViewController: UIViewController {
-    
+
     var presenter: MainPresenterProtocol?
+
+    var items = [MovieModel] ()
+    var spinner: UIActivityIndicatorView? = UIActivityIndicatorView(frame: .zero)
 
     var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
@@ -20,16 +23,6 @@ final class MainViewController: UIViewController {
         tv.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentif)
         return tv
     }()
-    
-//    var searchController: UISearchController = {
-//
-//        let sc = UISearchController(searchResultsController: nil)
-//        sc.searchBar.placeholder = "Busca..."
-////        searchController.obscuresBackgroundDuringPresentation = true
-//        return sc
-//    }()
-    
-//    var currentQuery: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,29 +45,12 @@ final class MainViewController: UIViewController {
     fileprivate func setUpTable(){
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .singleLine
     }
 
     fileprivate func setUpNavItem(){
         navigationItem.title = "Películas"
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .automatic
-
-        navigationController?.navigationBar.largeTitleTextAttributes =
-            [NSAttributedString.Key.foregroundColor: UIColor.white]
-
-
-        
-
-
     }
-
-    //    fileprivate func setUpSearchBar {
-    //
-    //                self.definesPresentationContext = true
-    //                navigationItem.searchController = searchController
-    //                searchController.searchResultsUpdater = self
-    //
-    //    }
 
     func setUpView() {
 
@@ -92,14 +68,11 @@ final class MainViewController: UIViewController {
 }
 
 extension MainViewController: MainViewProtocol {
-    func refresh() {
+
+    func show(items: [MovieModel]) {
+        self.items = items
         tableView.reloadData()
     }
-
-    func showSpinner() {
-        //TODO: Show spinner
-    }
-
 
     func showAlert(title: String, message: String?) {
         let alertController = UIAlertController(title: title,
@@ -114,15 +87,16 @@ extension MainViewController: MainViewProtocol {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return presenter?.itemsArray.count ?? 0
+        return items.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let item = presenter?.itemsArray[indexPath.row],
+        guard indexPath.row < items.count,
               let cell = tableView.dequeueReusableCell(withIdentifier: "MovieTableViewCell", for: indexPath) as? MovieTableViewCell
         else { return MovieTableViewCell() }
 
+        let item = items[indexPath.row]
         cell.configrue(with: item)
         return cell
         
@@ -130,26 +104,13 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        guard let movieModel = presenter?.itemsArray[indexPath.row] else { return }
-        presenter?.didSelectRow(indexPath)
+        guard indexPath.row < items.count  else { return }
+        let movieModel = items[indexPath.row]
+        presenter?.didSelectRow(with: movieModel)
         tableView.deselectRow(at: indexPath, animated: false)
     }
 
 }
-
-//extension MainViewController: UISearchResultsUpdating {
-//
-//    func updateSearchResults(for searchController: UISearchController) {
-//        guard let text = searchController.searchBar.text else {return}
-//
-//        guard text != "" else {return}
-//        currentQuery = text
-//        self.presenter?.getFilmsCollection(text)
-//        print(text)
-//    }
-//
-//
-//}
 
 extension MainViewController: UIScrollViewDelegate {
     
@@ -162,15 +123,20 @@ extension MainViewController: UIScrollViewDelegate {
             if ( (scrollView.contentSize.height - scrollView.contentOffset.y) < scrollView.frame.size.height){
                 
             print("SCROLLS")
-            
-//            guard let currentQuery = currentQuery else { return }
-//            guard currentQuery != "" else { return }
-//            
-//            presenter?.getMoreFilms(currentQuery)
-            
+            presenter?.scrolldidReachEnd()
         }
         
     }
-    
-    
+
+}
+
+extension MainViewController: Spinneable {
+
+    func showSpinner() {
+        self.startSpinner()
+    }
+
+    func hideSpinner() {
+        self.stopSpinner()
+    }
 }

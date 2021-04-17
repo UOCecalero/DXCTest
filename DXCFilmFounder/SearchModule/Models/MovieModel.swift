@@ -9,12 +9,6 @@
 import Foundation
 
 
-enum OriginalLanguage: String, Codable {
-    case en = "en"
-    case es = "es"
-    case fr = "fr"
-}
-
 // MARK: - Result
 struct MovieModel: Codable {
     let backdropPath, firstAirDate: String?
@@ -22,7 +16,7 @@ struct MovieModel: Codable {
     let id: Int?
     let name: String?
     let originCountry: [String]?
-    let originalLanguage: OriginalLanguage?
+    let originalLanguage: String?
     let originalName, overview: String?
     let popularity: Double?
     let posterPath: String?
