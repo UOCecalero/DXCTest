@@ -46,6 +46,7 @@ final class MainViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .singleLine
+        tableView.showsVerticalScrollIndicator = false
     }
 
     fileprivate func setUpNavItem(){
@@ -115,19 +116,10 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        print("CONTENTSIZE: \(scrollView.contentSize.height)")
-        print("CONTENTOFFSETY: \(scrollView.contentOffset.y)")
-        print("FRAME HEIGHT: \(scrollView.frame.size.height)")
-            
             if ( (scrollView.contentSize.height - scrollView.contentOffset.y) < scrollView.frame.size.height){
-                
-            print("SCROLLS")
             presenter?.scrolldidReachEnd()
         }
-        
     }
-
 }
 
 extension MainViewController: Spinneable {
