@@ -9,32 +9,29 @@
 import UIKit
 
 class MainRouter: MainRouterProtocol {
-    
-    
-    
-//        IF USING STORYBOARD
-//    static var storyboard: UIStoryboard {
-//        return UIStoryboard(name: "Main", bundle: nil)
-//    }
+
+    //static let dataController = DataController(modelName: "MoviesStorage")
+
     
     static func createMainViewController() -> UIViewController {
   
-//        IF USING STORYBOARD
-//        guard let mainViewController = storyboard.instantiateViewController(withIdentifier: "MainViewController") as? MainViewProtocol else {
-//            fatalError("Invalid view controller type")
-//        }
-        
             let mainViewController = MainViewController()
 
-        
             let presenter: MainPresenterProtocol  = MainPresenter()
-            mainViewController.presenter = presenter
-            presenter.view = mainViewController
-            let interactor: MainInteractorProtocol  = MainInteractor()
-            interactor.presenter = presenter
-            presenter.interactor = interactor
+                mainViewController.presenter = presenter
+                presenter.view = mainViewController
+
+
+            let dataController = DataController(modelName: "MoviesStorage")
+                dataController.load()
+            let localStorageDataManager = LocalStorageDataManager(dataController: dataController)
+
+            let interactor: MainInteractorProtocol  = MainInteractor(localStorageManager: localStorageDataManager)
+                interactor.presenter = presenter
+                presenter.interactor = interactor
+
             let router: MainRouterProtocol  = MainRouter()
-            presenter.router = router
+                presenter.router = router
         
             return mainViewController
         }

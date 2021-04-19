@@ -14,12 +14,13 @@ final class MainViewController: UIViewController {
 
     var items = [MovieModel] ()
     var spinner: UIActivityIndicatorView? = UIActivityIndicatorView(frame: .zero)
+    let refreshControl = UIRefreshControl()
 
     var tableView: UITableView = {
         let tv = UITableView(frame: .zero, style: .plain)
         tv.translatesAutoresizingMaskIntoConstraints = false
-        tv.separatorStyle = .none
-        tv.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
+        tv.separatorStyle = .singleLine
+        tv.backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         tv.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentif)
         return tv
     }()
@@ -45,12 +46,21 @@ final class MainViewController: UIViewController {
     fileprivate func setUpTable(){
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.separatorStyle = .singleLine
         tableView.showsVerticalScrollIndicator = false
+
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
     }
 
     fileprivate func setUpNavItem(){
         navigationItem.title = "Películas"
+    }
+
+    @objc fileprivate func reloadData() {
+        items = []
+        tableView.reloadData()
+        tableView.refreshControl?.endRefreshing()
+        presenter?.reset()
     }
 
     func setUpView() {
@@ -122,7 +132,7 @@ extension MainViewController: UIScrollViewDelegate {
     }
 }
 
-extension MainViewController: Spinneable {
+extension MainViewController: SpinneableProtocol {
 
     func showSpinner() {
         self.startSpinner()

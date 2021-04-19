@@ -43,36 +43,22 @@ class APIDataManager: MainDataManagerProtocol {
     typealias T = ResultsModel<MovieModel>
     typealias E = APIDataManagerError
 
-    var page: Int = 1
-    var maxPage: Int = 1
-    var buffer = [MovieModel]()
+    
 
     init(session: URLSession = URLSession.shared) {
         self.session = session
     }
 
-    func reload() {
-        page = 1
-        maxPage = 1
-        buffer = []
-    }
 
+    func fetchMovies(inPage page: Int, completion: @escaping FetchResult<ResultsModel<MovieModel>, APIDataManagerError>) {
 
-    func fetchMovies(completion: @escaping FetchResult<[MovieModel], APIDataManagerError>) {
-
-        guard page <= maxPage else { completion(.failure(.noMorePages)); return }
 
         self.fetchItems(from: TheMovieDBEndpoint.popularSeries(page)) { [weak self] result in
 
             switch result {
                 case .success(let pageResult):
 //                    guard page == pageResult.page else { completion(.failure(.unexpectedPage))}
-                    guard self?.page == pageResult.page else { completion(.success(self?.buffer ?? [])); return }
-
-                    self?.page += 1
-                    self?.maxPage = pageResult.totalPages ?? 1
-                    self?.buffer.append(contentsOf: pageResult.results.compactMap{ $0 })
-                    completion(.success(self?.buffer ?? []))
+                    completion(.success(pageResult))
 
             case .failure(let error):
                 completion(.failure(error))

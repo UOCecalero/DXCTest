@@ -26,7 +26,7 @@ import Foundation
 import Foundation
 
 // MARK: - ResultsModel
-struct ResultsModel<Model: Codable>: Codable {
+class ResultsModel<Model: Codable>: NSObject, Codable {
     let page: Int?
     let results: [Model?]
     let totalPages: Int?

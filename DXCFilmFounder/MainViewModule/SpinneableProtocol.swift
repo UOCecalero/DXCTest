@@ -9,11 +9,11 @@
 import UIKit
 
 
-protocol Spinneable {
+protocol SpinneableProtocol {
     var spinner: UIActivityIndicatorView? { get }
 }
 
-extension Spinneable where Self: UIViewController {
+extension SpinneableProtocol where Self: UIViewController {
 
     func startSpinner(){
         guard let spinner = spinner else { return }
