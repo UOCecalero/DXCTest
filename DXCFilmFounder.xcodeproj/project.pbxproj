@@ -37,6 +37,7 @@
 		F2010923262B2D7700BD2806 /* SF-Pro-Text-SemiboldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F2010910262B2D7700BD2806 /* SF-Pro-Text-SemiboldItalic.otf */; };
 		F2010957262C8DDC00BD2806 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2010956262C8DDC00BD2806 /* DataController.swift */; };
 		F2010966262CB0A700BD2806 /* MoviesStorage.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F2010964262CB0A700BD2806 /* MoviesStorage.xcdatamodeld */; };
+		F25CDE92262DB5EF00EDF0C8 /* DetailViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F25CDE91262DB5EF00EDF0C8 /* DetailViewController.storyboard */; };
 		F2C39E96262D604D00F15770 /* MainViewProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C39E83262D604D00F15770 /* MainViewProtocols.swift */; };
 		F2C39E97262D604D00F15770 /* LoadingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C39E85262D604D00F15770 /* LoadingTableViewCell.swift */; };
 		F2C39E98262D604D00F15770 /* MovieTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2C39E86262D604D00F15770 /* MovieTableViewCell.swift */; };
@@ -104,6 +105,7 @@
 		F201094A262B2FCA00BD2806 /* SF-Pro-Display-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Semibold.otf"; sourceTree = "<group>"; };
 		F2010956262C8DDC00BD2806 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		F2010965262CB0A700BD2806 /* MoviesStorage.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MoviesStorage.xcdatamodel; sourceTree = "<group>"; };
+		F25CDE91262DB5EF00EDF0C8 /* DetailViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = DetailViewController.storyboard; sourceTree = "<group>"; };
 		F2C39E83262D604D00F15770 /* MainViewProtocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewProtocols.swift; sourceTree = "<group>"; };
 		F2C39E85262D604D00F15770 /* LoadingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingTableViewCell.swift; sourceTree = "<group>"; };
 		F2C39E86262D604D00F15770 /* MovieTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieTableViewCell.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 		34C2627122E246C400F79408 /* DetailModule */ = {
 			isa = PBXGroup;
 			children = (
+				F25CDE90262DB5BD00EDF0C8 /* Views */,
 				34C2627422E2477100F79408 /* DetailProtocols.swift */,
 				34C2627A22E2496700F79408 /* DetailViewController.swift */,
 				34C2627D22E24D5B00F79408 /* DetailPresenter.swift */,
@@ -218,6 +221,14 @@
 				F2010910262B2D7700BD2806 /* SF-Pro-Text-SemiboldItalic.otf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		F25CDE90262DB5BD00EDF0C8 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F25CDE91262DB5EF00EDF0C8 /* DetailViewController.storyboard */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		F2C39E82262D604D00F15770 /* MainViewModule */ = {
@@ -358,6 +369,7 @@
 				F2010919262B2D7700BD2806 /* SF-Pro-Text-Ultralight.otf in Resources */,
 				F2010916262B2D7700BD2806 /* SF-Pro-Text-BlackItalic.otf in Resources */,
 				34C2625722E1DF7700F79408 /* Assets.xcassets in Resources */,
+				F25CDE92262DB5EF00EDF0C8 /* DetailViewController.storyboard in Resources */,
 				34C2625522E1DF7500F79408 /* Main.storyboard in Resources */,
 				F201091B262B2D7700BD2806 /* SF-Pro-Text-Thin.otf in Resources */,
 				F201091D262B2D7700BD2806 /* SF-Pro-Text-BoldItalic.otf in Resources */,

@@ -35,6 +35,6 @@ protocol DetailInteractorProtocol: class {
 
 protocol DetailRouterProtocol: class {
     
-    static func createDetailViewController(with item: MovieModel) -> UIViewController
+    static func createDetailViewController(with item: MovieModel) -> DetailViewController
     
 }

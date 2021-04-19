@@ -10,9 +10,9 @@ import UIKit
 
 class DetailRouter: DetailRouterProtocol {
     
-    static func createDetailViewController(with item: MovieModel) -> UIViewController {
-        
-        let detailViewController = DetailViewController()
+    static func createDetailViewController(with item: MovieModel) -> DetailViewController {
+
+        let detailViewController: DetailViewController = DetailViewController.generatedIntanceViewController()
         
         let presenter: DetailPresenterProtocol  = DetailPresenter()
             detailViewController.presenter = presenter
@@ -22,7 +22,8 @@ class DetailRouter: DetailRouterProtocol {
             presenter.interactor = interactor
         let router: DetailRouterProtocol  = DetailRouter()
             presenter.router = router
-        detailViewController.item = item
+            detailViewController.item = item
+
         
         return detailViewController
     }
