@@ -12,7 +12,7 @@ final class MainViewController: UIViewController {
 
     var presenter: MainPresenterProtocol?
 
-    var items = [MovieModel] ()
+    var items = [MovieEntity] ()
     var spinner: UIActivityIndicatorView? = UIActivityIndicatorView(frame: .zero)
     let refreshControl = UIRefreshControl()
 
@@ -59,8 +59,8 @@ final class MainViewController: UIViewController {
     @objc fileprivate func reloadData() {
         items = []
         tableView.reloadData()
-        tableView.refreshControl?.endRefreshing()
         presenter?.reset()
+        tableView.refreshControl?.endRefreshing()
     }
 
     func setUpView() {
@@ -80,7 +80,7 @@ final class MainViewController: UIViewController {
 
 extension MainViewController: MainViewProtocol {
 
-    func show(items: [MovieModel]) {
+    func show(items: [MovieEntity]) {
         self.items = items
         tableView.reloadData()
     }
@@ -98,7 +98,7 @@ extension MainViewController: MainViewProtocol {
 extension MainViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count ?? 0
+        return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -126,7 +126,9 @@ extension MainViewController: UITableViewDelegate, UITableViewDataSource {
 extension MainViewController: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            if ( (scrollView.contentSize.height - scrollView.contentOffset.y) < scrollView.frame.size.height){
+
+            let remaningScrollDistance = scrollView.contentSize.height - scrollView.frame.size.height
+            if ( scrollView.contentOffset.y > (remaningScrollDistance - 20) ) {
             presenter?.scrolldidReachEnd()
         }
     }

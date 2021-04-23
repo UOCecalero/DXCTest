@@ -23,15 +23,13 @@ class DetailViewController: UIViewController {
 
 
 
-    var item: MovieModel?
+    var item: MovieEntity?
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         presenter?.viewDidLoad()
         configView()
-        
-        
     }
 
     func configView(){
@@ -40,22 +38,53 @@ class DetailViewController: UIViewController {
 
         navigationItem.title = item.name
 
-        if let image = item.posterPath {
-            if let url = URL(string: "https://image.tmdb.org/t/p/w500\(image)"){
-                if let data = try? Data(contentsOf: url)
-                {
-                    let image = UIImage(data: data)
-                    self.image.image = image
+        if let imageData = item.posterImg {
+            let image = UIImage(data: imageData)
+            self.image.image = image
+
+        } else {
+            if let image = item.posterPath,
+               let url = URL(string: "https://image.tmdb.org/t/p/w500\(image)") {
+                    if let data = try? Data(contentsOf: url)
+                    {
+                        let image = UIImage(data: data)
+                        self.image.image = image
+                    }
                 }
             }
-        }
 
-        originalTitleLabel.text = "Título original: \(item.originalName ?? "")"
-        estrenoLabel.text = "Estreno: \(item.firstAirDate ?? "")"
-        originalVersionLabel.text = "V.O.: \(item.originalLanguage ?? "")"
-        countryLabel.text = "País de orígen: \(item.originCountry ?? [])"
-        rateLabel.text = "Puntuación \(item.voteAverage ?? 0.0)"
-        votesLabel.text = "\(item.voteCount ?? 0) votos"
+
+        let titleValue = NSMutableAttributedString()
+            titleValue.append(NSAttributedString(attributedString: "Título original: ".attributedWith(font: UIFont(name: "SFProText-Bold", size: 16))))
+            titleValue.append(NSAttributedString(string: item.originalName ?? "" ))
+        originalTitleLabel.attributedText = titleValue
+
+
+        let estrenoValue = NSMutableAttributedString()
+            estrenoValue.append(NSAttributedString(attributedString: "Estreno: ".attributedWith(font: UIFont(name: "SFProText-Bold", size: 16))))
+            estrenoValue.append(NSAttributedString(string: item.firstAirDate ?? "" ))
+        estrenoLabel.attributedText = estrenoValue
+
+        let voVerisonValue = NSMutableAttributedString()
+            voVerisonValue.append(NSAttributedString(attributedString: "V.O.: ".attributedWith(font: UIFont(name: "SFProText-Bold", size: 16))))
+            voVerisonValue.append(NSAttributedString(string: item.originalLanguage ?? ""))
+        originalVersionLabel.attributedText = voVerisonValue
+
+        let countryValue = NSMutableAttributedString()
+            countryValue.append(NSAttributedString(attributedString: "País: ".attributedWith(font: UIFont(name: "SFProText-Bold", size: 16))))
+            item.originCountry?.forEach {
+                countryValue.append(NSAttributedString(string: $0+" " ))
+            }
+        countryLabel.attributedText = countryValue
+
+
+        rateLabel.text = "Puntuación \(item.voteAverage)"
+
+        let votesValue = NSMutableAttributedString()
+            votesValue.append(NSAttributedString(string: "\(item.voteCount)"))
+            votesValue.append(NSAttributedString(attributedString: " votos".attributedWith(font: UIFont(name: "SFProText-Bold", size: 16))))
+
+        votesLabel.attributedText = votesValue
         descriptionLabel.text = "\(item.overview ?? "")"
 
     }

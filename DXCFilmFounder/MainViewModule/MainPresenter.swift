@@ -15,7 +15,7 @@ class MainPresenter: MainPresenterProtocol {
     var interactor: MainInteractorProtocol?
     var router: MainRouterProtocol?
 
-    var itemsArray = [MovieModel]()
+    var itemsArray = [MovieEntity]()
 
     func viewDidLoad() {}
 
@@ -31,7 +31,7 @@ class MainPresenter: MainPresenterProtocol {
         interactor?.reloadStorage()
     }
 
-    func show(items: [MovieModel]) {
+    func show(items: [MovieEntity]) {
         view?.show(items: items)
     }
 
@@ -47,7 +47,7 @@ class MainPresenter: MainPresenterProtocol {
         view?.showAlert(title: title, message: message)
     }
 
-    func didSelectRow(with item: MovieModel) {
+    func didSelectRow(with item: MovieEntity) {
         guard let view = view else { return }
         router?.goToDetail(from: view, with: item)
     }

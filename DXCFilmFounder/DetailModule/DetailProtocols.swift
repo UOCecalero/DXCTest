@@ -11,7 +11,7 @@ import UIKit
 protocol DetailViewProtocol: class {
     
     var presenter: DetailPresenterProtocol? { get set }
-    var item: MovieModel?                   { get set }
+    var item: MovieEntity?                   { get set }
 
     func showAlert(title: String, message: String)
 
@@ -35,6 +35,6 @@ protocol DetailInteractorProtocol: class {
 
 protocol DetailRouterProtocol: class {
     
-    static func createDetailViewController(with item: MovieModel) -> DetailViewController
+    static func createDetailViewController(with item: MovieEntity) -> DetailViewController
     
 }

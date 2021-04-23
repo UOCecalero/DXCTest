@@ -7,11 +7,13 @@
 //
 
 import Foundation
+import CoreData
 
 
 // MARK: - Helper functions for creating encoders and decoders
-func newJSONDecoder() -> JSONDecoder {
+func newJSONDecoder(with context: NSManagedObjectContext) -> JSONDecoder {
     let decoder = JSONDecoder()
+        decoder.userInfo[CodingUserInfoKey.managedObjectContext] = context
     if #available(iOS 10.0, OSX 10.12, tvOS 10.0, watchOS 3.0, *) {
         decoder.dateDecodingStrategy = .iso8601
         decoder.dataDecodingStrategy = .deferredToData

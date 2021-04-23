@@ -1,66 +1,12 @@
 //
-//  MainProtocols.swift
+//  MainDataManagerProtocol.swift
 //  DXCFilmFounder
 //
-//  Created by Edu Calero on 19/07/2019.
-//  Copyright © 2019 Lynx Developers. All rights reserved.
+//  Created by Eduard Calero on 20/04/2021.
+//  Copyright © 2021 Lynx Developers. All rights reserved.
 //
 
-import UIKit
-
-protocol MainViewProtocol: class {
-    
-    var presenter: MainPresenterProtocol?   { get set }
-
-    var items: [MovieModel] { get set }
-
-    func show(items: [MovieModel])
-    func showSpinner()
-    func hideSpinner()
-    func showAlert(title: String, message: String?)
-}
-
-protocol MainPresenterProtocol: class {
-    
-    var view: MainViewProtocol?             { get set }
-    var interactor: MainInteractorProtocol? { get set }
-    var router: MainRouterProtocol?         { get set }
-
-    func viewDidAppear()
-    func viewDidLoad()
-    func scrolldidReachEnd()
-    func reset()
-    func didSelectRow(with item: MovieModel)
-
-    func show(items: [MovieModel])
-    func showSpinner()
-    func hideSpinner()
-    func showAlert(title: String, message: String?)
-
-}
-
-
-typealias FetchResult<T: Decodable, E: Error> = ((Result<T, E>)->())
-
-protocol MainInteractorProtocol: class {
-    
-    var presenter: MainPresenterProtocol?      { get set }
-
-    func getPopularSeries()
-    func reloadStorage()
-
-//    func getPopularSeries(completion: @escaping (Result<[MovieModel], MainInteractorError>)->Void)
-
-}
-
-protocol MainRouterProtocol: class {
-
-    static func createMainViewController() -> UIViewController
-
-    func goToDetail(from view: MainViewProtocol, with item: MovieModel)
-
-}
-
+import Foundation
 
 enum APIDataManagerError: Error {
     case invalidStatusCode(Int, String?)
@@ -72,12 +18,15 @@ enum APIDataManagerError: Error {
     case uknown(Error?)
 }
 
+typealias FetchResult<T: Decodable, E: Error> = ((Result<T, E>)->())
+
 protocol  MainDataManagerProtocol {
 
     associatedtype T: Decodable
     associatedtype E: Error
 
-    var session: URLSession { get set }
+    var session: URLSession { get }
+    var decoder: JSONDecoder { get }
 
 }
 
@@ -88,7 +37,6 @@ extension MainDataManagerProtocol {
         print("""
                     API CALL *************************************************************
                     \(requestBuilder.urlRequest.description)
-                    **********************************************************************
             """)
 
         session.dataTask(with: requestBuilder.urlRequest) { data, response, error in
@@ -96,12 +44,20 @@ extension MainDataManagerProtocol {
             if let error = error {
                 DispatchQueue.main.async {
                     completion(.failure(.uknown(error)))
+                    print("""
+                        Result failed: Uknown
+                        **********************************************************************
+                        """)
                 }
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 DispatchQueue.main.async {
                     completion(.failure(.httpResponseError(nil)))
+                    print("""
+                        Result failed: Http responseError
+                        **********************************************************************
+                        """)
                 }
                 return
             }
@@ -109,6 +65,10 @@ extension MainDataManagerProtocol {
             if httpResponse.statusCode == 404 {
                 DispatchQueue.main.async {
                     completion(.failure(.notFoundError))
+                    print("""
+                        Result failed: 404 NOT FOUND
+                        **********************************************************************
+                        """)
                 }
                 return
             }
@@ -117,11 +77,19 @@ extension MainDataManagerProtocol {
                 if let data = data, let stringError = String(data: data, encoding: String.Encoding.utf8)  {
                     DispatchQueue.main.async {
                         completion(.failure(.invalidStatusCode(httpResponse.statusCode, stringError)))
+                        print("""
+                            Result failed: invalid status code
+                            **********************************************************************
+                            """)
                     }
                     return
                 } else {
                     DispatchQueue.main.async {
                         completion(.failure(.invalidStatusCode(httpResponse.statusCode, nil)))
+                        print("""
+                            Result failed: invalid status code
+                            **********************************************************************
+                            """)
                     }
                     return
                 }
@@ -131,22 +99,36 @@ extension MainDataManagerProtocol {
             guard let data = data else {
                 DispatchQueue.main.async {
                     completion(.failure(.uknown(nil)))
+                    print("""
+                        Result failed: uknown
+                        **********************************************************************
+                        """)
                 }
                 return
             }
 
-            guard let resultsModel = try? newJSONDecoder().decode(T.self, from: data)
+            guard let resultsModel = try? self.decoder.decode(T.self, from: data)
             else {
                 DispatchQueue.main.async {
                 completion(.failure(.JSONdecodingError))
+                print("""
+                    Result failed: JsonDecodingError
+                    **********************************************************************
+                    """)
                 }
                 return
             }
 
             DispatchQueue.main.async {
-                completion(.success(resultsModel))
+                completion(.success(resultsModel ))
+                print("""
+                    Success: \(resultsModel)
+                    **********************************************************************
+                    """)
+                
                 return
             }
+
 
         }.resume()
 

@@ -10,7 +10,7 @@ import UIKit
 
 class DetailRouter: DetailRouterProtocol {
     
-    static func createDetailViewController(with item: MovieModel) -> DetailViewController {
+    static func createDetailViewController(with item: MovieEntity) -> DetailViewController {
 
         let detailViewController: DetailViewController = DetailViewController.generatedIntanceViewController()
         

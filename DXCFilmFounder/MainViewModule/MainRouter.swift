@@ -24,9 +24,12 @@ class MainRouter: MainRouterProtocol {
 
             let dataController = DataController(modelName: "MoviesStorage")
                 dataController.load()
+        
             let localStorageDataManager = LocalStorageDataManager(dataController: dataController)
+            let decoder: JSONDecoder = newJSONDecoder(with: dataController.viewContext)
+            let apiDataManager = APIDataManager(decoder: decoder)
 
-            let interactor: MainInteractorProtocol  = MainInteractor(localStorageManager: localStorageDataManager)
+            let interactor: MainInteractorProtocol  = MainInteractor(apiDataManager: apiDataManager, localStorageManager: localStorageDataManager)
                 interactor.presenter = presenter
                 presenter.interactor = interactor
 
@@ -36,9 +39,9 @@ class MainRouter: MainRouterProtocol {
             return mainViewController
         }
     
-    func goToDetail(from view: MainViewProtocol, with film: MovieModel) {
+    func goToDetail(from view: MainViewProtocol, with item: MovieEntity) {
             
-        let detailViewController = DetailRouter.createDetailViewController(with: film)
+        let detailViewController = DetailRouter.createDetailViewController(with: item)
         
         guard let mainViewController = view as? MainViewController else {
             fatalError("Invalid View Protocol type")

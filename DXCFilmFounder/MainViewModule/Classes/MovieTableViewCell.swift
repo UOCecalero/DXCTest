@@ -10,7 +10,7 @@ import UIKit
 
 class MovieTableViewCell: UITableViewCell {
     
-    var item: MovieModel?
+    var item: MovieEntity?
 
     static let reuseIdentif = "MovieTableViewCell"
 
@@ -70,7 +70,7 @@ class MovieTableViewCell: UITableViewCell {
         setupView()
     }
 
-    func configrue(with item: MovieModel) {
+    func configrue(with item: MovieEntity) {
         self.item = item
         setupCell()
     }
@@ -82,10 +82,14 @@ extension MovieTableViewCell {
     fileprivate func setupCell() {
         
         self.titulo.text = item?.name
-        self.pais.text = item?.originCountry?.first ?? ""
+        let paisValue: NSMutableAttributedString = NSMutableAttributedString()
+            paisValue.append(NSAttributedString(attributedString: "Country: ".attributedWith(font: UIFont(name: "SFProText-Bold", size: 14))))
+            paisValue.append(NSAttributedString(string: item?.originCountry?.first ?? "" ))
+
+        self.pais.attributedText =  paisValue
         self.puntuacion.text = ""
         if let puntuacion = item?.voteAverage {
-            self.puntuacion.text = String(puntuacion)
+            self.puntuacion.text = "\u{2606} \(puntuacion)"
         }
 
 
@@ -104,7 +108,7 @@ extension MovieTableViewCell {
 
             puntuacion.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
             puntuacion.heightAnchor.constraint(equalToConstant: 44),
-            puntuacion.widthAnchor.constraint(equalToConstant: 44),
+            puntuacion.widthAnchor.constraint(equalToConstant: 70),
             puntuacion.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0),
 
             pais.leadingAnchor.constraint(equalTo: titulo.leadingAnchor, constant: 0),

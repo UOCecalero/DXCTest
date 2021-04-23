@@ -15,25 +15,23 @@ import Foundation
 
 final class MainInteractor: MainInteractorProtocol {
 
-    var items = [MovieModel]()
+    var items = [MovieEntity]()
 
     weak var presenter: MainPresenterProtocol?
 
     let apiDataManager : APIDataManager!
     let localStorageManager: LocalStorageDataManager!
 
-    init(apiDataManager: APIDataManager = APIDataManager(), localStorageManager: LocalStorageDataManager ) {
+    init(apiDataManager: APIDataManager, localStorageManager: LocalStorageDataManager ) {
         self.apiDataManager = apiDataManager
         self.localStorageManager = localStorageManager
     }
 
-    var page: Int = 1
-    var maxPage: Int = 1
+    var page: Int64 = 1
+    var maxPage: Int64 = 1
     var processing = false
 
     var apiCallClousure: (() -> Void)?
-
-    lazy var encoder = newJSONEncoder()
 
 
     func reload() {
@@ -48,7 +46,7 @@ final class MainInteractor: MainInteractorProtocol {
 
         self.apiCallClousure = {
             self.presenter?.showSpinner()
-            self.apiDataManager.fetchMovies(inPage: self.page) { [weak self] result in
+            self.apiDataManager.fetchMovies(inPage: Int(truncatingIfNeeded: self.page)){ [weak self] result in
                 self?.presenter?.hideSpinner()
 
                                 switch result {
@@ -59,20 +57,22 @@ final class MainInteractor: MainInteractorProtocol {
                                             self?.processing = false
                                             return
                                         }
+                                        guard let moviesEntityArray = pageResult.results?.array as? [MovieEntity] else { return }
+                                        self?.items.append(contentsOf: moviesEntityArray )
                                         self?.page += 1
-                                        if let totalPages = pageResult.totalPages { self?.maxPage = totalPages }
-                                        self?.items.append(contentsOf: pageResult.results.compactMap{ $0 })
-                                        self?.localStorageManager.savePage(pageResult) { [weak self] result in
+                                        self?.maxPage = pageResult.totalPages
+                                        self?.localStorageManager.saveContext { result in
                                             switch result {
-                                                case .success:
-                                                    break
-                                            case .failure(_):
-                                                    self?.presenter?.showAlert(title: "STORAGE ERROR", message: "The page hasn't been saved")
+                                            case .success(_):
+                                                self?.presenter?.show(items: self?.items ?? [])
+
+                                            case .failure(let error):
+                                                self?.presenter?.showAlert(title: "STORAGE ERROR", message: "The page has not been saved properly")
                                             }
-                                            self?.presenter?.show(items: self?.items ?? [])
-                                            self?.processing = false
-                                        }
+                                        self?.processing = false
                                         return
+                                        }
+
 
                                     case .failure(let error):
                                         switch error {
@@ -87,42 +87,22 @@ final class MainInteractor: MainInteractorProtocol {
         presenter?.showSpinner()
         guard page <= maxPage else { return }
 
-            localStorageManager.fetchMoviesPage(inPage: page) { [weak self] result in
+        localStorageManager.fetchPagedItems(in: page) { [weak self] result in
                 self?.presenter?.hideSpinner()
 
                 switch result {
                 case .success(let moviesPageEntity):
-                    guard self?.page == Int(moviesPageEntity.page)
+                    guard self?.page == moviesPageEntity.page
                     else {
                         self?.presenter?.showAlert(title: "STORAGE ERROR", message: "Uknown or unexpected page")
                         return
                     }
+                    guard var moviesEntityArray = moviesPageEntity.results?.array as? [MovieEntity] else { return }
+                    self?.items.append(contentsOf: moviesEntityArray)
                     self?.page += 1
-                    self?.maxPage = Int(truncatingIfNeeded: moviesPageEntity.totalPages)
+                    self?.maxPage = moviesPageEntity.totalPages
 
-                    var movieModelArray = [MovieModel]()
-
-                    moviesPageEntity.results?.forEach { element in
-                        guard let element = element as? MovieEntity else {
-                            fatalError("Incorrecet type type")
-                        }
-                        let model = MovieModel.init(backdropPath: element.backdropPath,
-                                                    firstAirDate: element.firstAirDate,
-                                                    genreIDS: [Int(truncatingIfNeeded: element.genreIDS)],
-                                                    id: Int(truncatingIfNeeded:  element.id),
-                                                    name: element.name,
-                                                    originCountry: [element.originCountry ?? ""],
-                                                    originalLanguage: element.originalLanguage,
-                                                    originalName: element.originalName,
-                                                    overview: element.overview,
-                                                    popularity: element.popularity,
-                                                    posterPath: element.posterPath,
-                                                    voteAverage: element.voteAverage,
-                                                    voteCount: Int(truncatingIfNeeded: element.voteCount))
-                        movieModelArray.append(model)
-                    }
-
-                    self?.items.append(contentsOf: movieModelArray)
+                    
                     self?.presenter?.show(items: self?.items ?? [])
                     self?.processing = false
                     return
@@ -150,17 +130,16 @@ final class MainInteractor: MainInteractorProtocol {
                 self?.page = 1
                 self?.maxPage = 1
                 self?.items = []
-
+                
+                self?.processing = false
                 self?.presenter?.viewDidAppear()
             case .failure(_):
                 self?.presenter?.showAlert(title: "STORAGE ERROR", message: "The storage has not been deleted")
+                self?.processing = false
             }
-            self?.processing = false
+
 
         }
     }
     
 }
-
-
-

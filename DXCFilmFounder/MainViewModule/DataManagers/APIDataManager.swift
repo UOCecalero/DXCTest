@@ -39,25 +39,26 @@ extension TheMovieDBEndpoint: RequestBuilder {
 class APIDataManager: MainDataManagerProtocol {
 
     var session: URLSession
+    var decoder: JSONDecoder
 
-    typealias T = ResultsModel<MovieModel>
+    typealias T = PageEntity
     typealias E = APIDataManagerError
 
     
 
-    init(session: URLSession = URLSession.shared) {
+    init(session: URLSession = URLSession.shared, decoder: JSONDecoder) {
         self.session = session
+        self.decoder = decoder
     }
 
 
-    func fetchMovies(inPage page: Int, completion: @escaping FetchResult<ResultsModel<MovieModel>, APIDataManagerError>) {
+    func fetchMovies(inPage page: Int, completion: @escaping FetchResult<PageEntity, APIDataManagerError>) {
 
 
-        self.fetchItems(from: TheMovieDBEndpoint.popularSeries(page)) { [weak self] result in
+        self.fetchItems(from: TheMovieDBEndpoint.popularSeries(page)) { result in
 
             switch result {
                 case .success(let pageResult):
-//                    guard page == pageResult.page else { completion(.failure(.unexpectedPage))}
                     completion(.success(pageResult))
 
             case .failure(let error):
