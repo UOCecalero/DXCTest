@@ -30,7 +30,7 @@ extension URLSession {
         }
     }
 
-    func resultsMovieModelTask(with url: URL, context: NSManagedObjectContext, completionHandler: @escaping (ResultsModel<MovieModel>?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
+    func pageEntityModelTask(with url: URL, context: NSManagedObjectContext, completionHandler: @escaping (PageEntity?, URLResponse?, Error?) -> Void) -> URLSessionDataTask {
         return self.codableTask(with: url, context: context, completionHandler: completionHandler)
     }
 }

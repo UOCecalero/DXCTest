@@ -66,7 +66,7 @@ final class MainInteractor: MainInteractorProtocol {
                                             case .success(_):
                                                 self?.presenter?.show(items: self?.items ?? [])
 
-                                            case .failure(let error):
+                                            case .failure(_):
                                                 self?.presenter?.showAlert(title: "STORAGE ERROR", message: "The page has not been saved properly")
                                             }
                                         self?.processing = false
@@ -97,7 +97,7 @@ final class MainInteractor: MainInteractorProtocol {
                         self?.presenter?.showAlert(title: "STORAGE ERROR", message: "Uknown or unexpected page")
                         return
                     }
-                    guard var moviesEntityArray = moviesPageEntity.results?.array as? [MovieEntity] else { return }
+                    guard let moviesEntityArray = moviesPageEntity.results?.array as? [MovieEntity] else { return }
                     self?.items.append(contentsOf: moviesEntityArray)
                     self?.page += 1
                     self?.maxPage = moviesPageEntity.totalPages

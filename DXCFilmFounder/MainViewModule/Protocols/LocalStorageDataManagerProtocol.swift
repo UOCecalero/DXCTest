@@ -73,22 +73,13 @@ extension LocalStorageDataManagerProtocol where E == LocalStorageDataManagerErro
     func saveContext(completion: @escaping ResultClousure<E>) {
 
         if dataController.viewContext.hasChanges {
-            do {
-                try? dataController.viewContext.save()
-                completion(.success(""))
-                return
-            } catch (let error) {
-                print(error)
+            guard let _ = try? dataController.viewContext.save()
+            else {
                 completion(.failure(.notSaved))
                 return
             }
-//            guard let _ = try? dataController.viewContext.save()
-//            else {
-//                completion(.failure(.notSaved))
-//                return
-//            }
-//            completion(.success(""))
-//            return
+            completion(.success(""))
+            return
         } else {
             completion(.success(""))
             return
